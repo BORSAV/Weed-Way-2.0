@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weed Store</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { 
+            background: black; 
+            color: white; 
+            text-align: center; 
+            transition: background 0.8s ease-in-out;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            transition: opacity 0.5s ease-in-out;
+        }
+        .logo { width: 150px; margin-bottom: 10px; }
+        input, button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        input {
+            border: 1px solid green;
+            background: black;
+            color: white;
+            outline: none;
+            text-align: center;
+        }
+        button {
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+        }
+        button:hover {
+            background: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 1);
+        }
+        button:disabled { background: gray; cursor: not-allowed; box-shadow: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="formContainer">
+        <img src="https://i.imgur.com/hzrusVB.png" alt="Weed Logo" class="logo">
+        <h2>Buy Weed Pack</h2>
+        <p>Price: <strong>₹250</strong> per pack</p>
+
+        <form id="purchaseForm">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="number" id="phone" placeholder="Your Contact Number" required>
+            <input type="number" id="quantity" placeholder="Quantity" required>
+            <button type="submit" id="buyBtn">Buy Now</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("purchaseForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            const quantity = document.getElementById("quantity").value;
+            const buyBtn = document.getElementById("buyBtn");
+
+            if (phone.length < 10) {
+                alert("Please enter a valid 10-digit contact number.");
+                return;
+            }
+            if (quantity <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            // Disable button to prevent repeated clicks
+            buyBtn.disabled = true;
+
+            // Telegram Bot Token & Group Chat ID
+            const botToken = "7599825145:AAEHDOeHrlmAubA9AyvHxAmWbLG-77aCFRg"; // Replace with your bot token
+            const chatId = "-1002292049680"; // Replace with your Telegram group chat ID
+
+            // Message to Send
+            const message = `🚀 New Order Received!\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n📦 Quantity: ${quantity}\n💰 Total Price: ₹${quantity * 250}`;
+
+            // Telegram API URL
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+            // Send Data to Telegram
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        alert("✅ Order placed successfully! Details sent to Telegram.");
+                    } else {
+                        alert("❌ Failed to send details to Telegram.");
+                    }
+                })
+                .catch(error => {
+                    alert("❌ Error connecting to Telegram.");
+                })
+                .finally(() => {
+                    buyBtn.disabled = false;
+                    document.getElementById("purchaseForm").reset();
+                });
+        });
+    </script>
+
+</body>
+</html>
