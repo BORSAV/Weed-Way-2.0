@@ -57,7 +57,8 @@
     <div class="container" id="formContainer">
         <img src="https://i.imgur.com/hzrusVB.png" alt="Weed Logo" class="logo">
         <h2>Buy Weed Pack</h2>
-        <p>Price: <strong>₹200</strong> per pack</p>
+        <p>Price: <strong>â‚¹200</strong> per pack</p>
+        <p id="stockStatus">Checking stock...</p>
 
         <form id="purchaseForm">
             <input type="text" id="name" placeholder="Your Name" required>
@@ -67,14 +68,52 @@
         </form>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
+
+        // Your Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAoIkQbQSdTE2liAeuyHHQ5SBWej-9eGzc",
+            authDomain: "weed-way.firebaseapp.com",
+            projectId: "weed-way",
+            storageBucket: "weed-way.firebasestorage.app",
+            messagingSenderId: "753679027405",
+            appId: "1:753679027405:web:9f66a97f860c0891b82d84"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const stockRef = doc(db, "settings", "stock");
+
+        const stockStatus = document.getElementById("stockStatus");
+        const buyBtn = document.getElementById("buyBtn");
+
+        async function checkStock() {
+            const stockSnap = await getDoc(stockRef);
+            if (stockSnap.exists() && stockSnap.data().status === false) {
+                stockStatus.textContent = "âŒ OUT OF STOCK";
+                buyBtn.disabled = true;
+            } else {
+                stockStatus.textContent = "âœ… In Stock";
+                buyBtn.disabled = false;
+            }
+        }
+
+        checkStock();
+
+        // Order Submission to Telegram
         document.getElementById("purchaseForm").addEventListener("submit", function(event) {
             event.preventDefault();
+
+            if (buyBtn.disabled) {
+                alert("âŒ This product is OUT OF STOCK!");
+                return;
+            }
 
             const name = document.getElementById("name").value;
             const phone = document.getElementById("phone").value;
             const quantity = document.getElementById("quantity").value;
-            const buyBtn = document.getElementById("buyBtn");
 
             if (phone.length < 10) {
                 alert("Please enter a valid 10-digit contact number.");
@@ -85,31 +124,26 @@
                 return;
             }
 
-            // Disable button to prevent repeated clicks
             buyBtn.disabled = true;
 
-            // Telegram Bot Token & Group Chat ID
-            const botToken = "7599825145:AAEHDOeHrlmAubA9AyvHxAmWbLG-77aCFRg"; // Replace with your bot token
-            const chatId = "-1002292049680"; // Replace with your Telegram group chat ID
+            const botToken = "7599825145:AAEHDOeHrlmAubA9AyvHxAmWbLG-77aCFRg";  // Replace with your bot token
+            const chatId = "-1002292049680";  // Replace with your Telegram group chat ID
 
-            // Message to Send
-            const message = `🚀 New Order Received!\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n📦 Quantity: ${quantity}\n💰 Total Price: ₹${quantity * 200}`;
+            const message = `ðŸš€ New Order Received!\n\nðŸ‘¤ Name: ${name}\nðŸ“ž Phone: ${phone}\nðŸ“¦ Quantity: ${quantity}\nðŸ’° Total Price: â‚¹${quantity * 200}`;
 
-            // Telegram API URL
             const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
 
-            // Send Data to Telegram
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     if (data.ok) {
-                        alert("✅ Order placed successfully! Details sent to Telegram.");
+                        alert("âœ… Order placed successfully! Details sent to Telegram.");
                     } else {
-                        alert("❌ Failed to send details to Telegram.");
+                        alert("âŒ Failed to send details to Telegram.");
                     }
                 })
                 .catch(error => {
-                    alert("❌ Error connecting to Telegram.");
+                    alert("âŒ Error connecting to Telegram.");
                 })
                 .finally(() => {
                     buyBtn.disabled = false;
