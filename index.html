@@ -57,7 +57,7 @@
     <div class="container" id="formContainer">
         <img src="https://i.imgur.com/hzrusVB.png" alt="Weed Logo" class="logo">
         <h2>Buy Weed Pack</h2>
-        <p>Price: <strong>â‚¹200</strong> per pack</p>
+        <p>Price: <strong>₹200</strong> per pack</p>
         <p id="stockStatus">Checking stock...</p>
 
         <form id="purchaseForm">
@@ -92,10 +92,10 @@
         async function checkStock() {
             const stockSnap = await getDoc(stockRef);
             if (stockSnap.exists() && stockSnap.data().status === false) {
-                stockStatus.textContent = "âŒ OUT OF STOCK";
+                stockStatus.textContent = "❌ OUT OF STOCK";
                 buyBtn.disabled = true;
             } else {
-                stockStatus.textContent = "âœ… In Stock";
+                stockStatus.textContent = "✅ In Stock";
                 buyBtn.disabled = false;
             }
         }
@@ -107,7 +107,7 @@
             event.preventDefault();
 
             if (buyBtn.disabled) {
-                alert("âŒ This product is OUT OF STOCK!");
+                alert("❌ This product is OUT OF STOCK!");
                 return;
             }
 
@@ -116,11 +116,11 @@
             const quantity = document.getElementById("quantity").value;
 
             if (phone.length < 10) {
-                alert("Please enter a valid 10-digit contact number.");
+                alert("⚠️ Please enter a valid 10-digit contact number.");
                 return;
             }
             if (quantity <= 0) {
-                alert("Please enter a valid quantity.");
+                alert("⚠️ Please enter a valid quantity.");
                 return;
             }
 
@@ -129,7 +129,7 @@
             const botToken = "7599825145:AAEHDOeHrlmAubA9AyvHxAmWbLG-77aCFRg";  // Replace with your bot token
             const chatId = "-1002292049680";  // Replace with your Telegram group chat ID
 
-            const message = `ðŸš€ New Order Received!\n\nðŸ‘¤ Name: ${name}\nðŸ“ž Phone: ${phone}\nðŸ“¦ Quantity: ${quantity}\nðŸ’° Total Price: â‚¹${quantity * 200}`;
+            const message = `🚀 New Order Received!\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n📦 Quantity: ${quantity}\n💰 Total Price: ₹${quantity * 200}`;
 
             const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
 
@@ -137,13 +137,13 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.ok) {
-                        alert("âœ… Order placed successfully! Details sent to Telegram.");
+                        alert("✅ Order placed successfully! Details sent to Telegram.");
                     } else {
-                        alert("âŒ Failed to send details to Telegram.");
+                        alert("❌ Failed to send details to Telegram.");
                     }
                 })
                 .catch(error => {
-                    alert("âŒ Error connecting to Telegram.");
+                    alert("❌ Error connecting to Telegram.");
                 })
                 .finally(() => {
                     buyBtn.disabled = false;
