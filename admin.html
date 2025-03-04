@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+</head>
+<body>
+    <h2>Admin Panel</h2>
+    <input type="password" id="password" placeholder="Enter Admin Password">
+    <button onclick="checkPassword()">Login</button>
+
+    <script>
+        function checkPassword() {
+            var password = document.getElementById("password").value;
+            if (password === "Bedanta@0") {  // Change "yourpassword" to a strong password
+                window.location.href = "admin-dashboard.html";  // Redirect to admin page
+            } else {
+                alert("Wrong password!");
+            }
+        }
+    </script>
+</body>
+</html>
