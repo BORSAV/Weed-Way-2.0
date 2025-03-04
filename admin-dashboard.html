@@ -6,7 +6,22 @@
     <title>Admin Dashboard</title>
 </head>
 <body>
-    <h2>Welcome to the Admin Dashboard</h2>
-    <p>Now you can change the stock status.</p>
+    <h2>Admin Dashboard</h2>
+    <p>Click the button to update the stock status.</p>
+
+    <button onclick="setOutOfStock()">Set Out of Stock</button>
+    <button onclick="setInStock()">Set In Stock</button>
+
+    <script>
+        function setOutOfStock() {
+            localStorage.setItem("stockStatus", "out");
+            alert("Stock status set to Out of Stock!");
+        }
+
+        function setInStock() {
+            localStorage.setItem("stockStatus", "in");
+            alert("Stock status set to In Stock!");
+        }
+    </script>
 </body>
 </html>
