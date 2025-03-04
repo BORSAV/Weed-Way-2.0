@@ -1,0 +1,14 @@
+backend:
+  name: git-gateway
+  branch: main  # Change this if your branch name is different
+
+media_folder: "uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "status"
+    label: "Stock Status"
+    folder: "content/status"
+    create: false
+    fields:
+      - { label: "Status", name: "stock", widget: "select", options: ["In Stock", "Out of Stock"] }
